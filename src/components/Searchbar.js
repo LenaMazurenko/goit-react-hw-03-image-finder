@@ -17,7 +17,7 @@ class Searchbar extends Component {
   handleWordSubmit = evt => {
     evt.preventDefault();
     if (this.state.searchWord.trim() === '') {
-      return toast.error('Введите запрос');
+      return toast.error('Enter query');
     }
     // Проп который передается форме для вызова при сабмите
     this.props.onSubmitProp(this.state.searchWord);

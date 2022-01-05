@@ -1,11 +1,18 @@
 import styled from '@emotion/styled';
 
+export const LoaderWrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
 export const Grid = styled.ul`
   display: grid;
   max-width: calc(100vw - 48px);
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   grid-gap: 16px;
-  margin-top: 0;
+  margin-top: 10px;
   margin-bottom: 0;
   padding: 0;
   list-style: none;
@@ -20,8 +27,13 @@ export const Item = styled.li`
 `;
 
 export const Image = styled.img`
+  display: block;
   width: 100%;
   height: 260px;
   object-fit: cover;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  :hover {
+    transform: scale(1.03);
+    cursor: zoom-in;
+  }
 `;
