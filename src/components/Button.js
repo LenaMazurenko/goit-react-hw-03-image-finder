@@ -1,22 +1,14 @@
 import React from 'react';
-//import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { LoadBtn } from './Button.styled';
 
-const Button = ({ onClickProp, label }) => {
+export default function Button({ onClickProp }) {
   return (
     <LoadBtn type="button" onClick={onClickProp}>
-      {label}
+      Load More
     </LoadBtn>
   );
+}
+Button.propTypes = {
+  onClickProp: PropTypes.func,
 };
-
-// ContactsList.propTypes = {
-//   findeContact: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.string,
-//       name: PropTypes.string,
-//       number: PropTypes.string,
-//     }),
-//   ),
-// };
-export default Button;

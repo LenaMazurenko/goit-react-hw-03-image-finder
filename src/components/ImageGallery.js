@@ -59,7 +59,12 @@ class ImageGallery extends Component {
         <Grid>
           {images.map(item => (
             <Item key={item.id}>
-              <Image src={item.webformatURL} alt="" />
+              <Image
+                src={item.webformatURL}
+                srcLarge={item.largeImageURL}
+                alt=""
+                onClick={() => this.props.handlerClickImg(item.webformatURL)}
+              />
             </Item>
           ))}
         </Grid>
