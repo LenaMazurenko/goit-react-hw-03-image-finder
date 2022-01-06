@@ -1,22 +1,57 @@
 import React, { Component } from 'react';
-import { ToastContainer } from 'react-toastify';
+
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import Loader from 'react-loader-spinner';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+
+import fetchQuery from './utils/fetchQuery';
+
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
 import Modal from './components/Modal';
 
+import { LoaderWrapper } from './components/ImageGallery.styled';
+
 class App extends Component {
   state = {
+    images: [],
     searchWord: '',
-    successfulyLoad: false,
+    status: 'idle',
     page: 1,
     showModal: false,
     activImg: '',
   };
 
-  //componentDidMount() {}
-  //componentDidUpdate(prevProps, prevState) {}
+  componentDidMount() {}
+
+  componentDidUpdate(prevProps, prevState) {
+    const { searchWord, page } = this.state;
+
+    if (prevState.searchWord !== searchWord || prevState.page !== page) {
+      this.setState({ status: 'pending' });
+
+      if (prevState.searchWord !== searchWord) {
+        this.setState({ images: [] });
+      }
+
+      fetchQuery(searchWord, page)
+        .then(images => {
+          if (images.total) {
+            this.setState(prevState => ({
+              images: [...prevState.images, ...images.hits],
+            }));
+            this.setState({ status: 'resolved' });
+          } else {
+            this.setState({ status: 'reject' });
+            toast.error('Bad request, try again!');
+          }
+        })
+        .catch(error => this.setState({ error }));
+    }
+  }
 
   //======================================
 
@@ -24,8 +59,8 @@ class App extends Component {
     this.setState({ searchWord, page: 1 });
   };
 
-  handleFetch = successfulyLoad => {
-    this.setState({ successfulyLoad });
+  handleFetch = status => {
+    this.setState({ status });
   };
   handleLoadMore = evt => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
@@ -47,18 +82,17 @@ class App extends Component {
   //===============================
 
   render() {
-    const { searchWord, successfulyLoad, page, showModal, activImg } =
-      this.state;
+    const { status, showModal, activImg, images } = this.state;
     return (
       <>
         <Searchbar onSubmitProp={this.handleformSubmit} />
-        <ImageGallery
-          searchWord={searchWord}
-          succesFetch={this.handleFetch}
-          page={page}
-          handlerClickImg={this.handleImageClick}
-        />
-        {successfulyLoad && <Button onClickProp={this.handleLoadMore} />}
+        <ImageGallery handlerClickImg={this.handleImageClick} images={images} />
+        {status === 'pending' && (
+          <LoaderWrapper>
+            <Loader type="Oval" color="#00BFFF" height={80} width={80} />
+          </LoaderWrapper>
+        )}
+        {status === 'resolved' && <Button onClickProp={this.handleLoadMore} />}
         {showModal && <Modal url={activImg} onClick={this.closeModal} />}
         <ToastContainer autoClose={2000} />
       </>
