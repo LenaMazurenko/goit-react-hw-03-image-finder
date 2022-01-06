@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Grid, Item, Image } from './ImageGallery.styled';
 
 export default function ImageGallery({ handlerClickImg, images }) {
@@ -15,3 +16,7 @@ export default function ImageGallery({ handlerClickImg, images }) {
     </Grid>
   );
 }
+ImageGallery.propTypes = {
+  handlerClickImg: PropTypes.func,
+  images: PropTypes.array,
+};
